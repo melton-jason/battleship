@@ -16,8 +16,7 @@ class Board:
     
     def hit_pos(self, coord: Coordinate) -> Optional[Cell]: 
         for cell in self.cells: 
-            if cell.check_hit(coord): 
-                cell.hit()
+            if cell.hit(coord):
                 return cell
         return None
     
