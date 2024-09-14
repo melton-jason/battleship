@@ -5,7 +5,7 @@ from pygame import Surface
 from .config import SCREEN_HEIGHT, SCREEN_WIDTH
 
 from .types import Coordinate
-from .display import Color
+from .types import Color
 
 
 def cell_width(container_width: float, grid_size: int) -> float:
@@ -24,6 +24,7 @@ def cell_width(container_width: float, grid_size: int) -> float:
 
 def cell_index_to_px(cell_index: int, container_width: float, grid_size: int) -> float:
     return cell_index * container_width / grid_size
+
 
 def px_to_cell_index(pixels: int, container_width: float, grid_size: int) -> int:
     return pixels * grid_size / container_width
@@ -58,7 +59,7 @@ class Cell:
         center = (self.x + self.width/2, self.y + self.height/2)
 
         # The radius of the circle should be slightly smaller than half the height of the Cell
-        # The radius is "slightly smaller" than half because it looks better than exactly half 
+        # The radius is "slightly smaller" than half because it looks better than exactly half
         # the height of the Cell
         circle_radius = self.height / 2.3
 
