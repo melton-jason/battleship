@@ -51,7 +51,6 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONUP:
                 mouse_pos = pygame.mouse.get_pos()
                 self.oponent_board.hit_pos(mouse_pos)
-                self.ships.hit_pos(mouse_pos)
 
     def handle_update(self):
         """
