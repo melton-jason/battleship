@@ -16,12 +16,12 @@ class Game:
         self.clock = clock
         self.surface = surface
         self.oponent_board = Board(y_offset=0, width=SCREEN_WIDTH,
-                           height=HALF_HEIGHT, board_size=grid_size)
+                                   height=HALF_HEIGHT, board_size=grid_size)
 
         # Put 1/3 cell worth of space in between the two boards
         third_cell = (cell_width(HALF_HEIGHT, grid_size) / 3)
         self.ships = Board(y_offset=HALF_HEIGHT + third_cell, width=SCREEN_WIDTH,
-                              height=HALF_HEIGHT - third_cell, board_size=grid_size)
+                           height=HALF_HEIGHT - third_cell, board_size=grid_size)
 
     def run(self):
         """
@@ -51,7 +51,6 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONUP:
                 mouse_pos = pygame.mouse.get_pos()
                 self.oponent_board.hit_pos(mouse_pos)
-                self.ships.hit_pos(mouse_pos)
 
     def handle_update(self):
         """
