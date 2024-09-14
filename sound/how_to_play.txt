@@ -1,0 +1,9 @@
+How to call and play these bad boys:
+
+# Load sound effects
+hit_sound = pygame.mixer.Sound('sounds/hit.wav')
+miss_sound = pygame.mixer.Sound('sounds/miss.wav')
+
+# Play sound effects
+hit_sound.play()  # Plays the "hit" sound
+miss_sound.play()  # Plays the "miss" sound
