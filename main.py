@@ -1,8 +1,6 @@
 import pygame
 
-from src.config import SCREEN_WIDTH ,SCREEN_HEIGHT, GRID_SIZE
-from src.game import Game
-from src.display import initialize_game_window
+from src import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE, Game, initialize_game_window
 
 pygame.init()
 GAME_WINDOW = initialize_game_window(SCREEN_WIDTH, SCREEN_HEIGHT)
