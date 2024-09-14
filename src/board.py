@@ -1,3 +1,4 @@
+import pygame
 from typing import Optional
 
 from pygame import Surface
@@ -5,10 +6,14 @@ from pygame import Surface
 from .types import Coordinate
 from .cell import Cell, px_to_cell_index
 
+from .ship import Ship
+
 class Board:
-    def __init__(self, y_offset, width, height, board_size) -> None:
+    def __init__(self, y_offset, width, height, board_size, ship_size) -> None:
         self.cells = [Cell(x, y + px_to_cell_index(y_offset, height, board_size), board_size, width, height) for x in range(board_size)
                       for y in range(board_size)]
+        self.ship_size = ship_size
+        self.ships = []
 
     def draw(self, surface: Surface):
         for cell in self.cells:
@@ -29,3 +34,28 @@ class Board:
                 return cell
         return None
     
+    def SpawnShip(self):
+        count = 0
+        while count < self.ship_size:
+            self.placeShip()
+            count += 1
+
+    def placeShip(self, ):
+        events = pygame.event.get()
+        coordinate = [] # Random coordinates
+        # Create a ship and spawn it randomly on the board
+        ship = Ship()
+        # Check if it is in bounds
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    location -= 1
+                if event.key == pygame.K_RIGHT:
+                    location += 1
+                if event.key == pygame.K_UP:
+                    location += 1
+                if event.key == pygame.K_DOWN:
+                    location += 1
+
+        self.ships.append(ship)
+        pass
