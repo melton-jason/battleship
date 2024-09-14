@@ -9,7 +9,7 @@ from .cell import Cell, px_to_cell_index
 from .ship import Ship
 
 class Board:
-    def __init__(self, y_offset, width, height, board_size) -> None:
+    def __init__(self, y_offset, width, height, board_size, ship_size) -> None:
         self.cells = [[Cell(x, y + px_to_cell_index(y_offset, height, board_size), board_size, width, height) for x in range(board_size)]
                       for y in range(board_size)]
         self.ship_size = ship_size
