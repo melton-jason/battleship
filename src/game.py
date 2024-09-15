@@ -22,15 +22,31 @@ class Game:
         third_cell = (cell_width(HALF_HEIGHT, grid_size) / 3)
         self.user_board = Board(y_offset=HALF_HEIGHT + third_cell, width=SCREEN_WIDTH,
                               height=HALF_HEIGHT - third_cell, board_size=grid_size, ship_size=5)
+        self.current_player = "opponent"
+        self.ship_placement_done = False
 
     def run(self):
         """
         Starts the Game and handles the core game loop
         """
         while self._running:
-            self.render()
-            self.handle_events()
-            self.handle_update()
+            if not self.ship_placement_done:
+                self.handle_ship_placement()
+            else:
+                self.render()
+                self.handle_events()
+                self.handle_update()
+
+    def handle_ship_placement(self):
+        """
+        Handles the ship placement phase of the game
+        """
+        if self.current_player == "user":
+            self.user_board.spawnShip()
+            self.ship_placement_done = True
+        elif self.current_player == "opponent":
+            self.opponent_board.spawnShip()
+            self.current_player = "user"
 
     def render(self):
         """
