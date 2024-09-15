@@ -6,17 +6,18 @@ from .config import SCREEN_HEIGHT, SCREEN_WIDTH
 
 from .types import Coordinate
 from .types import Color
+from .audio import Audio
 
 
 def cell_width(container_width: float, grid_size: int) -> float:
     """
     Calculates the width or height in px of an individual cell in an NxN grid of cells
 
-    Args: 
+    Args:
         container_size (float): The width or height of the container for the cell
         grid_size (int): The number of cells in a row/column of the NxN grid
 
-    Returns: 
+    Returns:
         float: The width or height of the cell in pixels
     """
     return container_width / grid_size
@@ -79,7 +80,13 @@ class Cell:
 
         pygame.draw.rect(surface, color, self.rect, 0 if self.has_ship else 1)
 
-    def draw(self, surface: Surface):
+    def draw_invisible(self, surface: Surface):
+        pygame.draw.rect(surface, Color.WHITE, self.rect, 1)
+
+    def draw(self, surface: Surface, visible: bool = True):
+        if not visible and not self.is_hit:
+            return self.draw_invisible(surface)
+
         if self.is_hit:
             self.draw_hit(surface)
         self.draw_normal(surface)
@@ -94,13 +101,17 @@ class Cell:
         """
         Checks whether the coordiate intersects with the cell and "hits" the cell if so. Returns whether the cell was hit or not
 
-        Args: 
+        Args:
             coordinate (Tuple[int, int]): The x and y coordinate of the hit in px
-        Returns: 
+        Returns:
             bool: True if the cell was hit, False otherwise
         """
         hit = self.rect.collidepoint(coordinate)
+
+        print("hit: ", hit)
         if hit:
+            Audio.play_hit()
             self._hit()
             return True
+        Audio.play_miss()
         return False
