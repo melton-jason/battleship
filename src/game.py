@@ -1,74 +1,80 @@
 import sys
-
 import pygame
 
-from .config import FPS, SCREEN_WIDTH, SCREEN_HEIGHT
+from .config import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
 
 from .board import Board
 from .cell import cell_width
+from .types import State, Player
+
+from .screens.menu import MenuScreen
+from .screens.playing import PlayingScreen
+from .screens.finish import FinishScreen
+from .screens.selection import SelectionScreen
 
 HALF_HEIGHT = SCREEN_HEIGHT / 2
-
 
 class Game:
     def __init__(self, clock, surface: pygame.Surface, grid_size: int) -> None:
         self._running = True
         self.clock = clock
-        self.surface = surface
-        self.opponent_board = Board(y_offset=0, width=SCREEN_WIDTH,
-                           height=HALF_HEIGHT, board_size=grid_size, ship_size=5)
+        self.num_ships = 1
 
-        # Put 1/3 cell worth of space in between the two boards
-        third_cell = (cell_width(HALF_HEIGHT, grid_size) / 3)
-        self.user_board = Board(y_offset=HALF_HEIGHT + third_cell, width=SCREEN_WIDTH,
-                              height=HALF_HEIGHT - third_cell, board_size=grid_size, ship_size=5)
-        self.current_player = "opponent"
-        self.ship_placement_done = False
+        self.current_player = Player.ONE
+
+        self.surface = surface
+        self.player_1_board = None
+        self.player_2_board = None
+
+        self.message = None
+
+        self.state = State.START
+        self.screens = {
+            State.START: MenuScreen(self),
+            State.SELECTION: SelectionScreen(self),
+            State.PLAYING: PlayingScreen(self),
+            State.END: FinishScreen(self),
+        }
+
+        # self.hit_sound = pygame.mixer.Sound("sound/hit.mp3")
+        # self.miss_sound = pygame.mixer.Sound("sound/miss.mp3")
+        # self.sink_sound = pygame.mixer.Sound("sound/sink.mp3")
+
+    def set_state(self, new_state):
+        # paint over the screen
+        self.state = new_state
+
+    def set_num_ships(self, num_ships):
+        print("set num ships: ", num_ships)
+        self.num_ships = num_ships
+        print(self.num_ships)
+
+        third_cell = (cell_width(HALF_HEIGHT, GRID_SIZE) / 3)
+
+        self.player_1_board = Board(y_offset=HALF_HEIGHT + third_cell, width=SCREEN_WIDTH, height=HALF_HEIGHT - third_cell, board_size=GRID_SIZE, ship_size=self.num_ships)
+        self.player_2_board = Board(y_offset=0, width=SCREEN_WIDTH, height=HALF_HEIGHT, board_size=GRID_SIZE, ship_size=self.num_ships)
 
     def run(self):
-        """
-        Starts the Game and handles the core game loop
-        """
         while self._running:
-            if not self.ship_placement_done:
-                self.handle_ship_placement()
-            else:
-                self.render()
-                self.handle_events()
-                self.handle_update()
+            events = pygame.event.get()
+            self.screens[self.state].render(self.surface)
+            self.screens[self.state].handle_events(events)
+            self.screens[self.state].update()
 
-    def handle_ship_placement(self):
-        """
-        Handles the ship placement phase of the game
-        """
-        if self.current_player == "user":
-            self.user_board.spawnShip()
-            self.ship_placement_done = True
-        elif self.current_player == "opponent":
-            self.opponent_board.spawnShip()
-            self.current_player = "user"
+            self.handle_global_events(events)
+            self.handle_global_update()
 
-    def render(self):
-        """
-        Handles drawing and showing all UI
-        """
-        self.opponent_board.draw(self.surface)
-        self.user_board.draw(self.surface)
-
-    def handle_events(self):
+    def handle_global_events(self, events):
         """
         Handles catching and processing events which happen each frame: i.e., game logic
         """
-        for event in pygame.event.get():
+        for event in events:
             if event.type == pygame.QUIT:
                 self._running = False
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONUP:
-                mouse_pos = pygame.mouse.get_pos()
-                self.opponent_board.hit_pos(mouse_pos)
 
-    def handle_update(self):
+    def handle_global_update(self):
         """
         Handles advancing the game state
         """

@@ -15,29 +15,30 @@ class Board:
         self.ship_size = ship_size
         self.ships = []
 
-    def draw(self, surface: Surface):
+    def draw(self, surface: Surface, show_ships: bool = True):
         for row in self.cells:
             for cell in row:
-                cell.draw(surface)
+                cell.draw(surface, show_ships)
         for ship in self.ships:
             ship.draw(self)
 
     def hit_pos(self, coord: Coordinate) -> Optional[Cell]:
         """
-        Checks whether the given coordinate hits a cell in the board. "Hits" and returns the cell if hit, 
-        or returns None to indiciate no cells were hit 
+        Checks whether the given coordinate hits a cell in the board. "Hits" and returns the cell if hit,
+        or returns None to indiciate no cells were hit
 
-        Args: 
+        Args:
             coord (Tuple[int, int]): The x and y coordinate of the hit in px
-        Returns: 
+        Returns:
             Cell or None: The Cell hit by the coordinate, or None if no cells in the board were hit
         """
+
         for row in self.cells:
             for cell in row:
                 if cell.hit(coord):
                     return cell
         return None
-    
+
     def spawnShip(self):
         """
         Spawns a ship on the board
@@ -58,9 +59,8 @@ class Board:
         direction = ["VERTICAL", "HORIZONTAL"]
         direction_counter = 0
         valid_direction_counter = direction_counter
-        
+
         ship = Ship(x, y, ship_size, direction[valid_direction_counter])
-        ship.draw(self)
 
         place_ship = True
         while place_ship:
@@ -96,7 +96,7 @@ class Board:
             ship.draw(self)
             self.draw(pygame.display.get_surface())
             pygame.display.update()
-            
+
     def isValidLocation(self, newShip: Ship):
         """
         Checks if the new ship is in a valid location on the board and does not intersect with any other ships
@@ -106,7 +106,7 @@ class Board:
             if coord_newShip.intersection(set(ship.coordinates)):
                 return False
         return True
-    
+
     def reset_cells(self):
         """
         Resets the is_active state of all cells to False
@@ -114,7 +114,7 @@ class Board:
         for row in self.cells:
             for cell in row:
                 cell.is_active = False
-    
+
     def mark_ship_cells(self, ship: Ship):
         """
         Marks the cells occupied by the ship as having a ship
