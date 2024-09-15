@@ -6,12 +6,10 @@ from .types import Coordinate
 
 class Ship:
 
-    def __init__(self, x: int, y: int, length: int, direction, container_width=SCREEN_WIDTH, container_height=SCREEN_HEIGHT / 2) -> None:
+    def __init__(self, x: int, y: int, length: int, direction) -> None:
         self.coordinates = []
         self.length = length
         self.direction = direction
-        self.container_width = container_width
-        self.container_height = container_height
         self.createShip(x,y)
 
     def createShip(self, x: int, y: int):
