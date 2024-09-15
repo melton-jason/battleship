@@ -35,6 +35,8 @@ class Cell:
         self.rect = pygame.Rect(cell_index_to_px(x, container_width, size), cell_index_to_px(
             y, container_height, size), cell_width(container_width, size), cell_width(container_height, size))
         self.is_hit: bool = False
+        self.is_active: bool = False
+        self.has_ship: bool = False
         self.size = size
         self.visible = True
 
@@ -66,9 +68,16 @@ class Cell:
         pygame.draw.circle(surface, Color.WHITE, center, circle_radius)
 
     def draw_normal(self, surface: Surface):
-        color = Color.RED if self.is_hit else Color.WHITE
+        if self.is_hit:
+            color = Color.RED
+        elif self.has_ship:
+            color = Color.GREEN
+        elif self.is_active:
+            color = Color.GREEN
+        else:
+            color = Color.WHITE
 
-        pygame.draw.rect(surface, color, self.rect, 1)
+        pygame.draw.rect(surface, color, self.rect, 0 if self.has_ship else 1)
 
     def draw(self, surface: Surface):
         if self.is_hit:
