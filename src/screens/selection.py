@@ -9,6 +9,7 @@ from ..cell import cell_width
 class SelectionScreen(Screen):
     def __init__(self, game: "Game") -> None:
         super().__init__(game)
+        self.shipsToPlace = game.num_ships
 
     def render(self, surface):
         # Add 1/3 cell worth of space in between the two boards for greater visual distinction
@@ -41,3 +42,4 @@ class SelectionScreen(Screen):
         self.write("Use the arrow keys to move the ship", self.font_sm, Color.BLACK, surface, middle_of_screen, initial_offset + 25, True)
         self.write("Use R to rotate the ship", self.font_sm, Color.BLACK, surface, middle_of_screen, initial_offset + 50, True)
         self.write("Press ENTER to confirm ship location", self.font_sm, Color.BLACK, surface, middle_of_screen, initial_offset + 75, True)
+        self.write(f"Ships to place: {self.game.num_ships}", self.font_sm, Color.BLACK, surface, middle_of_screen, initial_offset + 100, True)
