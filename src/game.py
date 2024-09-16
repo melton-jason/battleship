@@ -2,13 +2,12 @@ import sys
 import pygame
 from typing import List
 
-from .config import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
+from .config import FPS, SCREEN_HEIGHT, GRID_SIZE
 
 from .board import Board
-from .cell import cell_width
 from .types import State, Player
 
-from .screens import MenuScreen, PlayingScreen, FinishScreen, SelectionScreen, TurnTransition
+from .screens import MenuScreen, PlayingScreen, FinishScreen, SelectionScreen, TurnTransition, BeginGameScreen
 
 HALF_HEIGHT = SCREEN_HEIGHT / 2
 
@@ -36,6 +35,7 @@ class Game:
             State.TURN_TRANSITION: TurnTransition(self),
             State.PLAYING: PlayingScreen(self),
             State.END: FinishScreen(self, self.winner),
+            State.BEGIN_GAME: BeginGameScreen(self)
         }
 
     def set_state(self, new_state):
@@ -46,19 +46,15 @@ class Game:
         self.num_ships = num_ships
         print(self.num_ships)
 
-        third_cell = (cell_width(HALF_HEIGHT, GRID_SIZE) / 3)
-
-        self.player_1_board = Board(y_offset=HALF_HEIGHT + third_cell, width=SCREEN_WIDTH, height=HALF_HEIGHT - third_cell, board_size=GRID_SIZE, ship_size=self.num_ships)
-        self.player_2_board = Board(y_offset=0, width=SCREEN_WIDTH, height=HALF_HEIGHT, board_size=GRID_SIZE, ship_size=self.num_ships)
+        self.player_1_board = Board(y_offset=SCREEN_HEIGHT / 2, board_size=GRID_SIZE, ship_size=self.num_ships)
+        self.player_2_board = Board(y_offset=0, board_size=GRID_SIZE, ship_size=self.num_ships)
 
     def run(self):
         while self._running:
             if self.game_over:
                 self.state = State.END
                 while self.game_over:
-                    print("game over")
                     events = pygame.event.get()
-                    print(events)
                     self.screens[self.state].render(self.surface)
                     self.screens[self.state].handle_events(events)
                     self.screens[self.state].update()

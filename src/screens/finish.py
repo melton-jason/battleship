@@ -18,7 +18,7 @@ class FinishScreen(Screen):
         instructions = "Press Q to Quit or R to Play Again"
         instructions_surface = small_font.render(instructions, True, pygame.Color('white'))
 
-        surface.fill(pygame.Color('darkblue'))
+        surface.fill(Color.BACKGROUND)
 
         surface.blit(text_surface, (surface.get_width() // 2 - text_surface.get_width() // 2, surface.get_height() // 2 - text_surface.get_height() // 2 - 50))
         surface.blit(instructions_surface, (surface.get_width() // 2 - instructions_surface.get_width() // 2, surface.get_height() // 2 - instructions_surface.get_height() // 2 + 50))

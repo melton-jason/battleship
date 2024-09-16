@@ -9,7 +9,7 @@ from ..types import Button, Color, State, Player
 from ..config import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
-class TurnTransition(Screen):
+class BeginGameScreen(Screen):
     def __init__(self, game: "Game") -> None:
         super().__init__(game)
         self.game = game
@@ -18,8 +18,11 @@ class TurnTransition(Screen):
 
     def render(self, surface: Surface):
         surface.fill(Color.BACKGROUND)
-        self.write(f"Player {self.other_player().value}'s Turn",
-                   self.font_md, Color.WHITE, surface, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, True)
+        self.write('BATTLESHIP', self.font_lg, Color.WHITE, surface, SCREEN_WIDTH // 2, 75, True)
+        self.write('——————————', self.font_sm, Color.WHITE, surface, SCREEN_WIDTH // 2, 125, True)
+
+        self.write(f"Pass the computer to back your opponent!",
+                   self.font_sm, Color.WHITE, surface, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4, True)
         self.continue_button.draw(surface)
         self.continue_button.update(pygame.mouse.get_pos())
 
@@ -34,5 +37,4 @@ class TurnTransition(Screen):
                 mouse_pos = pygame.mouse.get_pos()
                 if self.continue_button.is_clicked(mouse_pos):
                     self.continue_button.is_checked = False
-                    self.game.current_player = self.other_player()
                     self.game.set_state(State.PLAYING)

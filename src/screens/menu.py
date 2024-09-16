@@ -23,13 +23,14 @@ class MenuScreen(Screen):
         self.selected_ships = None
 
     def render(self, surface):
-        surface.fill((255, 255, 255))
+        surface.fill(Color.BACKGROUND)
+
         # Title text
-        self.write('BATTLESHIP', self.font_lg, Color.BLACK, surface, SCREEN_WIDTH // 2, 75, True)
-        self.write('——————————', self.font_sm, Color.BLACK, surface, SCREEN_WIDTH // 2, 125, True)
+        self.write('BATTLESHIP', self.font_lg, Color.WHITE, surface, SCREEN_WIDTH // 2, 75, True)
+        self.write('——————————', self.font_sm, Color.WHITE, surface, SCREEN_WIDTH // 2, 125, True)
 
         # Ship selection text
-        self.write('Select the number of ships:', self.font_sm, Color.BLACK, surface, SCREEN_WIDTH // 2, 175, True)
+        self.write('Select the number of ships:', self.font_sm, Color.WHITE, surface, SCREEN_WIDTH // 2, 175, True)
 
         mouse_pos = pygame.mouse.get_pos()
         for button in self.buttons:
