@@ -91,12 +91,6 @@ class Cell:
             self.draw_hit(surface)
         self.draw_normal(surface)
 
-    def _hit(self):
-        """
-        Any internal logic the class needs to perform whenever it is hit
-        """
-        self.is_hit = True
-
     def hit(self, coordinate: Coordinate) -> bool:
         """
         Checks whether the coordiate intersects with the cell and "hits" the cell if so. Returns whether the cell was hit or not
@@ -111,7 +105,7 @@ class Cell:
         print("hit: ", hit)
         if hit:
             Audio.play_hit()
-            self._hit()
+            self.is_hit = True
             return True
         Audio.play_miss()
         return False
