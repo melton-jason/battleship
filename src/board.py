@@ -15,6 +15,7 @@ class Board:
         self.ship_size = ship_size
         self.ships = []
 
+
     def draw(self, surface: Surface, show_ships: bool = True):
         for row in self.cells:
             for cell in row:
@@ -121,3 +122,18 @@ class Board:
         """
         for (x, y) in ship.coordinates:
             self.cells[y][x].has_ship = True
+    
+    def all_ships_sunk(self) -> bool:
+        if len(self.ships) == self.ship_size:
+            for ship in self.ships:
+                if not self.is_ship_sunk(ship):
+                    return False
+            return True
+        return False
+
+    def is_ship_sunk(self, ship: Ship) -> bool:
+        for (x, y) in ship.coordinates:
+            cell = self.cells[y][x]
+            if not cell.is_hit:
+                return False
+        return True
