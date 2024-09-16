@@ -10,3 +10,4 @@
 | UI Development        | Noah   | 3               | 2.75         | 2024-09-14 |
 | Start Screen/Data init        | Alexis   | 2               | 2.5         | 2024-09-14 |
 | Ship/Board Classes        | Bhavik   | 2               | 4         | 2024-09-14 |
+| Player Turns        | Jason | 2 | 3.67 | 2024-09-15 |
