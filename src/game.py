@@ -1,5 +1,6 @@
 import sys
 import pygame
+from typing import List
 
 from .config import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
 
@@ -7,10 +8,7 @@ from .board import Board
 from .cell import cell_width
 from .types import State, Player
 
-from .screens.menu import MenuScreen
-from .screens.playing import PlayingScreen
-from .screens.finish import FinishScreen
-from .screens.selection import SelectionScreen
+from .screens import MenuScreen, PlayingScreen, FinishScreen, SelectionScreen, TurnTransition
 
 HALF_HEIGHT = SCREEN_HEIGHT / 2
 
@@ -28,20 +26,16 @@ class Game:
 
         self.message = None
 
-        self.state = State.START
+        self.state: State = State.START
         self.screens = {
             State.START: MenuScreen(self),
             State.SELECTION: SelectionScreen(self),
+            State.TURN_TRANSITION: TurnTransition(self),
             State.PLAYING: PlayingScreen(self),
             State.END: FinishScreen(self),
         }
 
-        # self.hit_sound = pygame.mixer.Sound("sound/hit.mp3")
-        # self.miss_sound = pygame.mixer.Sound("sound/miss.mp3")
-        # self.sink_sound = pygame.mixer.Sound("sound/sink.mp3")
-
     def set_state(self, new_state):
-        # paint over the screen
         self.state = new_state
 
     def set_num_ships(self, num_ships):
@@ -64,7 +58,7 @@ class Game:
             self.handle_global_events(events)
             self.handle_global_update()
 
-    def handle_global_events(self, events):
+    def handle_global_events(self, events: List[pygame.event.Event]):
         """
         Handles catching and processing events which happen each frame: i.e., game logic
         """

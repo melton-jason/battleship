@@ -76,7 +76,7 @@ class Board:
                     elif event.key == pygame.K_DOWN:
                         ship.move("DOWN")
                     elif event.key == pygame.K_RETURN:
-                        if self.isValidLocation(ship):
+                        if self.isValidShipLocation(ship):
                             self.ships.append(ship)
                             self.mark_ship_cells(ship)
                             place_ship = False
@@ -97,7 +97,7 @@ class Board:
             self.draw(pygame.display.get_surface())
             pygame.display.update()
 
-    def isValidLocation(self, newShip: Ship):
+    def isValidShipLocation(self, newShip: Ship):
         """
         Checks if the new ship is in a valid location on the board and does not intersect with any other ships
         """

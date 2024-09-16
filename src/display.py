@@ -1,8 +1,6 @@
 import pygame
 
 from .types import Color
-from .cell import cell_width
-from .config import GRID_SIZE
 
 def initialize_game_window(width, height):
     GAME_WINDOW = pygame.display.set_mode(size=(width, height))
