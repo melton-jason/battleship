@@ -99,11 +99,4 @@ class Ship:
             return y - self.length+1 >= 0
         elif direction == "HORIZONTAL":
             return x + self.length-1 < 10
-
-    def hit(self, coordinate: Coordinate) -> bool:
-        pass
-
-    def isSunk(self) -> bool:
-        pass
-
     
