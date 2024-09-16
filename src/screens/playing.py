@@ -2,31 +2,38 @@ import pygame
 
 from ._screen import Screen
 from ..types import Color, Player, State
-from ..config import SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE
-from ..cell import cell_width
+from ..config import SCREEN_WIDTH, SCREEN_HEIGHT
+from ..audio import Audio
 
+TURN_TRANSITION_EVENT = pygame.USEREVENT + 1
 
 class PlayingScreen(Screen):
     def __init__(self, game: "Game") -> None:
         super().__init__(game)
+        self.TURN_TRANSITION_DELAY = 1000  # 1 second delay
 
     def render(self, surface):
-        surface.fill(Color.WHITE)
+        surface.fill(Color.BACKGROUND)
 
-        # Add 1/3 cell worth of space in between the two boards for greater visual distinction
-        third_cell = (cell_width(SCREEN_HEIGHT/2, GRID_SIZE) / 3)
-
-        pygame.draw.rect(surface, Color.PLAYER_1_BOARD_COLOR,
-                         (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT / 2))
-        pygame.draw.rect(surface, Color.PLAYER_2_BOARD_COLOR, (0, (SCREEN_HEIGHT / 2) +
-                         third_cell, SCREEN_WIDTH, (SCREEN_HEIGHT / 2) + third_cell))
+        # Create overlay if it doesn't exist
+        if not hasattr(self, 'overlay'):
+            self.overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT // 2), pygame.SRCALPHA)
+            self.overlay.fill((0, 0, 0, 100))  # Semi-transparent red
 
         if self.game.current_player == Player.ONE:
             self.game.player_1_board.draw(surface)
             self.game.player_2_board.draw(surface, False)
+            # Apply overlay to bottom half (Player 2's board)
+            surface.blit(self.overlay, (0, SCREEN_HEIGHT // 2))
         elif self.game.current_player == Player.TWO:
             self.game.player_1_board.draw(surface, False)
             self.game.player_2_board.draw(surface)
+            # Apply overlay to top half (Player 1's board)
+            surface.blit(self.overlay, (0, 0))
+
+        # Draw a line to separate the boards
+        # pygame.draw.line(surface, Color.WHITE, (0, SCREEN_HEIGHT // 2), (SCREEN_WIDTH, SCREEN_HEIGHT // 2), 6)
+
 
     def handle_events(self, events):
         for event in events:
@@ -39,4 +46,9 @@ class PlayingScreen(Screen):
                     hit = self.game.player_1_board.hit_pos(mouse_pos)
 
                 if hit:
-                    self.game.set_state(State.TURN_TRANSITION)
+                    # Set a timer for turn transition
+                    pygame.time.set_timer(TURN_TRANSITION_EVENT, self.TURN_TRANSITION_DELAY, loops=1)
+
+            elif event.type == TURN_TRANSITION_EVENT:
+                # This event will be triggered after the delay
+                self.game.set_state(State.TURN_TRANSITION)

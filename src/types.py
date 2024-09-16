@@ -7,11 +7,15 @@ Coordinate = Tuple[int, int]
 
 
 class Color:
+    BACKGROUND = pygame.Color(28, 50, 93)
+    CELL_NEUTRAL = pygame.Color(44, 73, 127)
+    CELL_HIT = pygame.Color(255, 0, 0)
+    CELL_SHIP = pygame.Color(0, 255, 0)
+    GREEN = pygame.Color(106, 141, 115)
     WHITE = pygame.Color(255, 255, 255)
     BLACK = pygame.Color(0, 0, 0)
     GREY = pygame.Color(128, 128, 128)
-    RED = pygame.Color(255, 0, 0)
-    GREEN = pygame.Color(0, 255, 0)
+    RED = pygame.Color(219, 48, 105)
     BLUE = pygame.Color(0, 0, 255)
     DARK_BLUE = pygame.Color(0, 0, 139)
     BUTTON_BG = pygame.Color(0, 128, 255)  # A dark blue
@@ -26,6 +30,7 @@ class State(Enum):
     TURN_TRANSITION = 3
     PLAYING = 4
     END = 5
+    BEGIN_GAME = 6
 
 
 class Player(Enum):

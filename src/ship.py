@@ -2,7 +2,6 @@ import pygame
 from typing import Literal
 
 from .config import SCREEN_HEIGHT, SCREEN_WIDTH, GRID_SIZE
-
 from .types import Coordinate
 
 
@@ -101,4 +100,4 @@ class Ship:
             return y - self.length+1 >= 0
         elif direction == "HORIZONTAL":
             return x + self.length-1 < 10
-    
+

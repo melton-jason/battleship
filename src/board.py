@@ -4,14 +4,15 @@ import sys
 from pygame import Surface
 
 from .types import Coordinate
-from .cell import Cell, px_to_cell_index
-
+from .config import COL_SIZE
+from .cell import Cell
+from .audio import Audio
 from .ship import Ship
 
 class Board:
-    def __init__(self, y_offset, width, height, board_size, ship_size) -> None:
-        self.cells = [[Cell(x, y + px_to_cell_index(y_offset, height, board_size), board_size, width, height) for x in range(board_size)]
-                      for y in range(board_size)]
+    def __init__(self, y_offset, board_size, ship_size) -> None:
+        self.cells = [[Cell(x, y, y_offset) for x in range(board_size)] for y in range(board_size)]
+
         self.ship_size = ship_size
         self.ships = []
 
@@ -36,8 +37,12 @@ class Board:
 
         for row in self.cells:
             for cell in row:
-                if cell.hit(coord):
+                if cell.hit(coord, self):
+                    print("Cell hit")
                     return cell
+
+        print("No cell hit")
+
         return None
 
     def spawnShip(self):
@@ -122,13 +127,27 @@ class Board:
         """
         for (x, y) in ship.coordinates:
             self.cells[y][x].has_ship = True
-    
+
     def all_ships_sunk(self) -> bool:
         if len(self.ships) == self.ship_size:
             for ship in self.ships:
                 if not self.is_ship_sunk(ship):
                     return False
             return True
+        return False
+
+    def check_ship_sunk(self, hit_cell: Cell) -> bool:
+        print("Checking if ship sunk", hit_cell.x // COL_SIZE, hit_cell.y // COL_SIZE)
+        print(self.ships)
+        for ship in self.ships:
+            print(ship.coordinates)
+            if (hit_cell.x // COL_SIZE, (hit_cell.y // COL_SIZE)) in ship.coordinates:
+                if not self.is_ship_sunk(ship):
+                    print("Ship sunk")
+                    Audio.play_sink()
+                    return True
+                else:
+                    print("Ship not sunk")
         return False
 
     def is_ship_sunk(self, ship: Ship) -> bool:
