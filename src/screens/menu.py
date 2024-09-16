@@ -1,18 +1,18 @@
 import pygame
 
 from ._screen import Screen
-from src.types import State
+from ..types import State, Color, Button
 from ..config import SCREEN_WIDTH
 
 class MenuScreen(Screen):
-    def __init__(self, game) -> None:
+    def __init__(self, game: "Game") -> None:
         super().__init__(game)
 
         self.ship_count = None
 
-        button_text_color = (255, 255, 255)
-        button_bg_color = (0, 128, 255)
-        button_hover_color = (0, 200, 255)
+        button_text_color = Color.WHITE
+        button_bg_color = Color.BUTTON_BG
+        button_hover_color = Color.BUTTON_HOVER
 
         self.buttons = [
             Button(str(i), (SCREEN_WIDTH // 6) + (i-1) * 60, 225, self.font_sm, button_text_color, button_bg_color, button_hover_color, True)
@@ -25,11 +25,11 @@ class MenuScreen(Screen):
     def render(self, surface):
         surface.fill((255, 255, 255))
         # Title text
-        self.write('BATTLESHIP', self.font_lg, (0, 0, 0), surface, SCREEN_WIDTH // 2, 75, True)
-        self.write('——————————', self.font_sm, (0, 0, 0), surface, SCREEN_WIDTH // 2, 125, True)
+        self.write('BATTLESHIP', self.font_lg, Color.BLACK, surface, SCREEN_WIDTH // 2, 75, True)
+        self.write('——————————', self.font_sm, Color.BLACK, surface, SCREEN_WIDTH // 2, 125, True)
 
         # Ship selection text
-        self.write('Select the number of ships:', self.font_sm, (0, 0, 0), surface, SCREEN_WIDTH // 2, 175, True)
+        self.write('Select the number of ships:', self.font_sm, Color.BLACK, surface, SCREEN_WIDTH // 2, 175, True)
 
         mouse_pos = pygame.mouse.get_pos()
         for button in self.buttons:
@@ -71,52 +71,3 @@ class MenuScreen(Screen):
                     if self.selected_ships is not None:
                         self.game.set_state(State.SELECTION)
 
-class Button:
-    def __init__(self, text, x, y, font, text_color, bg_color, hover_color, center=False, square=True):
-        self.square = square
-        self.text = text
-        self.x = x
-        self.y = y
-        self.font = font
-        self.text_color = text_color
-        self.bg_color = bg_color
-        self.hover_color = hover_color
-        self.center = center
-        self.current_color = bg_color
-        self.clicked_color = (0, 255, 0)  # Green color for clicked state
-        self.rect = None
-        self.is_checked = False  # New attribute to track checked state
-
-    def draw(self, surface):
-        text_surface = self.font.render(self.text, True, self.text_color)
-        if self.rect is None:
-            if self.center:
-                self.rect = text_surface.get_rect(center=(self.x, self.y))
-            else:
-                self.rect = text_surface.get_rect(topleft=(self.x, self.y))
-
-            if self.square:
-                self.rect.width = self.rect.height = max(self.rect.width + 10, self.rect.height + 10)
-            else: self.rect.inflate_ip(75, 10)  # Add some padding
-
-        pygame.draw.rect(surface, self.current_color, self.rect)
-        surface.blit(text_surface, text_surface.get_rect(center=self.rect.center))
-
-    def update(self, mouse_pos):
-        if self.rect is None:
-            return
-        if self.rect.collidepoint(mouse_pos):
-            if not self.is_checked:
-                self.current_color = self.hover_color
-        else:
-            if not self.is_checked:
-                self.current_color = self.bg_color
-
-    def is_clicked(self, mouse_pos):
-        if self.rect is None:
-            return False
-        if self.rect.collidepoint(mouse_pos):
-            self.is_checked = not self.is_checked
-            self.current_color = self.clicked_color if self.is_checked else self.bg_color
-            return True
-        return False

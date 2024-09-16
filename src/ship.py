@@ -1,16 +1,18 @@
 import pygame
+from typing import Literal
 
 from .config import SCREEN_HEIGHT, SCREEN_WIDTH, GRID_SIZE
 
 from .types import Coordinate
 
+
 class Ship:
 
-    def __init__(self, x: int, y: int, length: int, direction) -> None:
+    def __init__(self, x: int, y: int, length: int, direction: Literal["VERTICAL", "HORIZONTAL"]) -> None:
         self.coordinates = []
         self.length = length
         self.direction = direction
-        self.createShip(x,y)
+        self.createShip(x, y)
 
     def createShip(self, x: int, y: int):
         """
@@ -33,7 +35,7 @@ class Ship:
             if 0 <= x < len(board.cells) and 0 <= y < len(board.cells[0]):
                 board.cells[y][x].is_active = True
 
-    def move(self, direction: str) -> None:
+    def move(self, direction: Literal["UP", "RIGHT", "DOWN", "LEFT"]) -> None:
         """
         Move the ship in the given direction
         """
@@ -63,7 +65,7 @@ class Ship:
         # Update coordinates if all new positions are valid
         if update:
             self.coordinates = new_coordinates
-    
+
     def changeDirection(self, new_direction: str) -> None:
         """
         Change the direction of the ship
@@ -87,7 +89,7 @@ class Ship:
         if update:
             self.direction = new_direction
             self.coordinates = new_coordinates
-    
+
     def isValidDirection(self, direction: str):
         """
         Check if the ship can be placed in the given direction
@@ -105,5 +107,3 @@ class Ship:
 
     def isSunk(self) -> bool:
         pass
-
-    
